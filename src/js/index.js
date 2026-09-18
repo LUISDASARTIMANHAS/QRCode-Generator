@@ -1,21 +1,56 @@
 const textInput = document.getElementById('text');
 const sizeInput = document.getElementById('size');
+const customWidthInput = document.getElementById('customWidth');
+const customHeightInput = document.getElementById('customHeight');
 const levelInput = document.getElementById('level');
 const qrContainer = document.getElementById('qrcode');
 const statusNode = document.getElementById('status');
 const generateBtn = document.getElementById('generateBtn');
 const downloadBtn = document.getElementById('downloadBtn');
+const customSizeGroup = document.getElementById('customSizeGroup');
 
 /**
  * Atualiza a mensagem de status visível na interface.
  *
- * @param {string} message - Texto exibido para o usuário.
- * @param {boolean} [isSuccess=false] - Define se a mensagem representa sucesso.
+ * @param {string} message - Mensagem exibida ao usuário.
+ * @param {boolean} [isSuccess=false] - Define se a mensagem é de sucesso.
  * @returns {void}
  */
 function setStatus(message, isSuccess = false) {
   statusNode.textContent = message;
   statusNode.style.color = isSuccess ? '#86efac' : '#cbd5e1';
+}
+
+/**
+ * Retorna a largura e altura atuais do QR Code.
+ *
+ * @returns {{ width: number, height: number }}
+ */
+function getCurrentDimensions() {
+  if (sizeInput.value === 'custom') {
+    const width = Number(customWidthInput.value) || 640;
+    const height = Number(customHeightInput.value) || 320;
+    return {
+      width: Math.max(64, width),
+      height: Math.max(64, height)
+    };
+  }
+
+  const size = Number(sizeInput.value) || 192;
+  return {
+    width: size,
+    height: size
+  };
+}
+
+/**
+ * Exibe ou oculta os campos de dimensão personalizada.
+ *
+ * @returns {void}
+ */
+function toggleCustomSizeFields() {
+  const isCustom = sizeInput.value === 'custom';
+  customSizeGroup.classList.toggle('d-none', !isCustom);
 }
 
 /**
@@ -34,11 +69,12 @@ function generateQRCode() {
   }
 
   qrContainer.innerHTML = '';
+  const { width, height } = getCurrentDimensions();
 
   const config = {
     text: value,
-    width: Number(sizeInput.value),
-    height: Number(sizeInput.value),
+    width,
+    height,
     colorDark: '#0f172a',
     colorLight: '#f8fafc',
     correctLevel: QRCode.CorrectLevel[levelInput.value]
@@ -46,7 +82,7 @@ function generateQRCode() {
 
   new QRCode(qrContainer, config);
   downloadBtn.disabled = false;
-  setStatus('QR Code gerado com sucesso.', true);
+  setStatus(`QR Code gerado com sucesso (${width}×${height}px).`, true);
 }
 
 /**
@@ -93,6 +129,12 @@ function downloadQRCode() {
 
 generateBtn.addEventListener('click', generateQRCode);
 downloadBtn.addEventListener('click', downloadQRCode);
+sizeInput.addEventListener('change', () => {
+  toggleCustomSizeFields();
+  generateQRCode();
+});
+customWidthInput.addEventListener('input', generateQRCode);
+customHeightInput.addEventListener('input', generateQRCode);
 textInput.addEventListener('keydown', (event) => {
   if (event.key === 'Enter' && !event.shiftKey) {
     event.preventDefault();
@@ -100,4 +142,5 @@ textInput.addEventListener('keydown', (event) => {
   }
 });
 
+toggleCustomSizeFields();
 window.addEventListener('load', generateQRCode);

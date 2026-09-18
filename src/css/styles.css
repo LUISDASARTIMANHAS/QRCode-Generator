@@ -80,6 +80,14 @@ textarea {
   min-height: 52px;
 }
 
+#customSizeGroup {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#customSizeGroup.d-none {
+  display: none;
+}
+
 .form-control:focus,
 .form-select:focus {
   border-color: rgba(96, 165, 250, 0.8);

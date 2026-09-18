@@ -49,8 +49,9 @@
               <div class="col-md-6">
                 <label class="form-label text-light fw-semibold" for="size">Tamanho</label>
                 <select id="size" class="form-select bg-dark text-light border-light-subtle">
+                  <option value="custom" selected>Personalizado</option>
                   <option value="128">128 x 128</option>
-                  <option value="192" selected>192 x 192</option>
+                  <option value="192">192 x 192</option>
                   <option value="256">256 x 256</option>
                   <option value="320">320 x 320</option>
                 </select>
@@ -64,6 +65,34 @@
                   <option value="Q">Alta</option>
                   <option value="H" selected>Máxima</option>
                 </select>
+              </div>
+            </div>
+
+            <div id="customSizeGroup" class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label text-light fw-semibold" for="customWidth">Largura</label>
+                <input
+                  id="customWidth"
+                  class="form-control bg-dark text-light border-light-subtle"
+                  type="number"
+                  min="64"
+                  max="2000"
+                  step="8"
+                  value="640"
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label text-light fw-semibold" for="customHeight">Altura</label>
+                <input
+                  id="customHeight"
+                  class="form-control bg-dark text-light border-light-subtle"
+                  type="number"
+                  min="64"
+                  max="2000"
+                  step="8"
+                  value="320"
+                />
               </div>
             </div>
 
